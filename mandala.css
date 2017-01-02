@@ -1,0 +1,11 @@
+@CHARSET "UTF-8";
+
+#svg {
+	width: 300px;
+	height: 300px;
+}
+
+.resizable {
+	display: inline-block;
+	border: 1px solid black;
+}

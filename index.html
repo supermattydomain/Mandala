@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Mandala</title>
+  <link rel="stylesheet" href="mandala.css" type="text/css" media="screen" />
+  <link rel="stylesheet" type="text/css" href="../lib/jquery-ui/jquery-ui-1.10.2.custom.min.css" />
+  <script type="text/javascript" src="../lib/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="../lib/jquery-ui/jquery-ui-1.10.2.custom.min.js"></script>
+  <script type="text/javascript" src="../lib/Snap.svg/dist/snap.svg-min.js"></script>
+  <script type="text/javascript" src="../lib/jsdebug/debug.js"></script>
+  <script type="text/javascript" src="../lib/js-lib/maths.js"></script>
+  <script type="text/javascript" src="../lib/js-lib/strings.js"></script>
+  <script type="text/javascript" src="mandala.js"></script>
+</head>
+<body>
+
+<div class="resizable">
+<svg id="svg" viewbox="-1.5 -1.5 3 3"></svg>
+</div>
+
+<div id="controls">
+
+  <label for="radialRepetitions">Radial curve repetitions per mandala:</label>
+  <input type="text" id="radialRepetitions" readonly>
+  <div id="sliderRadialRepetitions"></div>
+
+  <label for="lineCount">Number of curves:</label>
+  <input type="text" id="lineCount" readonly>
+  <div id="sliderLineCount"></div>
+
+  <label for="curvePoints">Points per curve:</label>
+  <input type="text" id="curvePoints" readonly>
+  <div id="sliderCurvePoints"></div>
+
+  <button id="generate">Generate Mandala</button>
+
+</div>
+
+</body>
+</html>
