@@ -30,17 +30,20 @@ jQuery.extend(Mandala.Mandala.prototype, {
 	},
 	init: function() {
 		var i;
-		this.params.curvePoints = randomIntBetween(
-			this.params.curvePointsMin, this.params.curvePointsMax
-		);
-		this.params.radialRepetitionCount = randomIntBetween(
-			this.params.radialRepetitionsMin,
-			this.params.radialRepetitionsMax
-		);
-		this.params.lineCount = randomIntBetween(
-			this.params.lineCountMin,
-			this.params.lineCountMax
-		);
+		$.extend(this.params, {
+			curvePoints: randomIntBetween(
+				this.params.curvePointsMin,
+				this.params.curvePointsMax
+			),
+			radialRepetitionCount: randomIntBetween(
+				this.params.radialRepetitionsMin,
+				this.params.radialRepetitionsMax
+			),
+			lineCount: randomIntBetween(
+				this.params.lineCountMin,
+				this.params.lineCountMax
+			)
+		});
 		this.snap.clear();
 		this.group = this.snap.group();
 		for (i = 0; i < this.params.lineCount; i++) {
@@ -100,7 +103,7 @@ jQuery.extend(Mandala.Mandala.prototype, {
 		} else {
 			fillColour = 'none';
 		}
-		for (i = 1; i < this.params.curvePoints; i++) {
+		for (i = 2; i < this.params.curvePoints; i++) {
 			bezierPoints[0] = this.randomPoint();
 			bezierPoints[1] = this.randomPoint();
 			str += ( ' S ' + bezierPoints[0][0] + ' ' + bezierPoints[0][1]
@@ -157,7 +160,7 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			range: true,
 			min: 1,
 			max: 10,
-			values: [ 1, 3 ],
+			values: [ 2, 3 ],
 			slide: function( event, ui ) {
 				$("#lineCount").val(ui.values[0] + " - " + ui.values[1]);
 				mandala.param({
@@ -173,9 +176,9 @@ jQuery.extend(Mandala.Mandala.prototype, {
 		);
 		$("#sliderCurvePoints").slider({
 			range: true,
-			min: 1,
+			min: 2,
 			max: 10,
-			values: [ 1, 3 ],
+			values: [ 2, 3 ],
 			slide: function( event, ui ) {
 				$("#curvePoints").val(ui.values[0] + " - " + ui.values[1]);
 				mandala.param({
