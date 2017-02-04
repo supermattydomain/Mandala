@@ -31,6 +31,7 @@ if (typeof Mandala === "undefined") {
 
 Mandala.Mandala = function(selector) {
 	this.snap = Snap(selector);
+	this.animating = false;
 };
 
 /**
@@ -49,6 +50,7 @@ jQuery.extend(Mandala.Mandala.prototype, {
 	init: function() {
 		var i;
 		$.extend(this.params, {
+			animationTime: 10000,
 			curvePoints: randomIntBetween(
 				this.params.curvePointsMin,
 				this.params.curvePointsMax
@@ -68,17 +70,21 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			this.group.add(this.createCurve());
 		}
 		this.group.toDefs();
+		/*
 		this.reflected = this.group.use();
 		this.reflected.transform("scale(-1,1)");
 		this.reflected.toDefs();
+		*/
 		for (i = 0; i < this.params.radialRepetitionCount * 2; i++) {
+			var transform = "rotate(" + (i * 360 / this.params.radialRepetitionCount) + ")";
 			var use;
-			if ((i % 2) == 0) {
-				use = this.group.use();
-			} else {
-				use = this.reflected.use();
-			}
-			use.transform("rotate(" + (i * 360 / this.params.radialRepetitionCount) + ")");
+			/* non-reflected copy */
+			use = this.group.use();
+			use.transform(transform);
+			this.snap.add(use);
+			/* rotated copy */
+			use = this.group.use();
+			use.transform("scale(-1,1) " + transform);
 			this.snap.add(use);
 		}
 	},
@@ -101,7 +107,7 @@ jQuery.extend(Mandala.Mandala.prototype, {
 		hsb.h = (hsb.h + 0.5) % 1;
 		return Snap.hsb2rgb(hsb.h, hsb.s, hsb.b).hex;
 	},
-	createCurve: function() {
+	makeCurvePath: function() {
 		var
 			i,
 			startPoint = this.randomPoint(),
@@ -116,11 +122,6 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			strokeColour = this.randomColour(),
 			fillColour
 		;
-		if (this.params.doFill) {
-			fillColour = this.contrastingColour(strokeColour);
-		} else {
-			fillColour = 'none';
-		}
 		for (i = 2; i < this.params.curvePoints; i++) {
 			bezierPoints[0] = this.randomPoint();
 			bezierPoints[1] = this.randomPoint();
@@ -128,9 +129,40 @@ jQuery.extend(Mandala.Mandala.prototype, {
 				+ ", " + bezierPoints[1][0] + ' ' + bezierPoints[1][1]
 			);
 		}
-		return this.snap.path(str).attr({
+		return str;
+	},
+	createCurve: function() {
+		var
+			strokeColour = this.randomColour(),
+			fillColour
+		;
+		if (this.params.doFill) {
+			fillColour = this.contrastingColour(strokeColour);
+		} else {
+			fillColour = 'none';
+		}
+		return this.snap.path(this.makeCurvePath()).attr({
 			stroke: strokeColour, strokeWidth: "1%", fill: fillColour
 		});
+	},
+	isAnimating: function() {
+		return this.animating;
+	},
+	doAnimation: function() {
+		var i, mandala = this;
+		if (!this.animating) {
+			return;
+		}
+		this.group[0].animate({d: this.makeCurvePath()}, this.params.animationTime, function() {
+			mandala.doAnimation();
+		});
+		for (i = 1; i < this.group.node.childNodes.length; i++) {
+			this.group[i].animate({d: this.makeCurvePath()}, this.params.animationTime);
+		}
+	},
+	toggleAnimation: function() {
+		this.animating = !this.animating;
+		this.doAnimation();
 	}
 });
 
@@ -221,6 +253,14 @@ jQuery.extend(Mandala.Mandala.prototype, {
 		mandala.init();
 		$('#download').on("click", function() {
 			downloadSVGAsPNG($(selector), $('#downloadLink'));
+		});
+		$('#startStop').on("click", function() {
+			mandala.toggleAnimation();
+			$(this).button(
+				"option", "label",
+				(mandala.isAnimating() ? "Stop" : "Start")
+				+ " Animation"
+			);
 		});
 	});
 })(jQuery);
