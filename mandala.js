@@ -70,11 +70,6 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			this.group.add(this.createCurve());
 		}
 		this.group.toDefs();
-		/*
-		this.reflected = this.group.use();
-		this.reflected.transform("scale(-1,1)");
-		this.reflected.toDefs();
-		*/
 		for (i = 0; i < this.params.radialRepetitionCount * 2; i++) {
 			var transform = "rotate(" + (i * 360 / this.params.radialRepetitionCount) + ")";
 			var use;
@@ -153,11 +148,24 @@ jQuery.extend(Mandala.Mandala.prototype, {
 		if (!this.animating) {
 			return;
 		}
-		this.group[0].animate({d: this.makeCurvePath()}, this.params.animationTime, function() {
-			mandala.doAnimation();
-		});
+		this.group[0].animate(
+			{
+				d: this.makeCurvePath(),
+				stroke: this.randomColour(),
+			},
+			this.params.animationTime,
+			function() {
+				mandala.doAnimation();
+			}
+		);
 		for (i = 1; i < this.group.node.childNodes.length; i++) {
-			this.group[i].animate({d: this.makeCurvePath()}, this.params.animationTime);
+			this.group[i].animate(
+				{
+					d: this.makeCurvePath(),
+					stroke: this.randomColour(),
+				},
+				this.params.animationTime
+			);
 		}
 	},
 	toggleAnimation: function() {
