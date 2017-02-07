@@ -150,6 +150,14 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			);
 		}
 	},
+	startAnimation: function() {
+		this.animating = true;
+		this.doAnimation();
+	},
+	stopAnimation: function() {
+		this.animating = false;
+		this.doAnimation();
+	},
 	toggleAnimation: function() {
 		this.animating = !this.animating;
 		this.doAnimation();
@@ -162,7 +170,8 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			selector = "#svg",
 			resizable = $('.resizable'),
 			mandala = new Mandala.Mandala(selector),
-			pathInput = $('#path')
+			pathInput = $('#path'),
+			startStopButton = $('#startStop')
 		;
 		// Enable jQuery UI buttons and checkboxes
 		$("button, input[type='button'], input[type='checkbox']").button();
@@ -175,8 +184,17 @@ jQuery.extend(Mandala.Mandala.prototype, {
 		resizable.on('resizestop', function(event, ui) {
 			$(selector).css({ width: resizable.width(), height: resizable.height() });
 		});
+		function updateAnimateButton() {
+			startStopButton.button(
+				"option", "label",
+				(mandala.isAnimating() ? "Stop" : "Start")
+				+ " Animation"
+			);
+		}
 		$('#generate').on("click", function() {
+			mandala.stopAnimation();
 			mandala.init();
+			updateAnimateButton();
 		});
 		$("#sliderRadialRepetitions").slider({
 			range: true,
@@ -240,17 +258,15 @@ jQuery.extend(Mandala.Mandala.prototype, {
 			curvePointsMin: $("#sliderCurvePoints").slider("values", 0),
 			curvePointsMax: $("#sliderCurvePoints").slider("values", 1)
 		});
-		mandala.init();
 		$('#download').on("click", function() {
 			downloadSVGAsPNG($(selector), $('#downloadLink'));
 		});
-		$('#startStop').on("click", function() {
+		startStopButton.on("click", function() {
 			mandala.toggleAnimation();
-			$(this).button(
-				"option", "label",
-				(mandala.isAnimating() ? "Stop" : "Start")
-				+ " Animation"
-			);
+			updateAnimateButton();
 		});
+		mandala.init();
+		mandala.startAnimation();
+		updateAnimateButton();
 	});
 })(jQuery);
