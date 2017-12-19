@@ -22,17 +22,26 @@
 
 <div id="controls">
 
+  <fieldset>
+  <legend>Radial symmetry</legend>
   <label for="radialRepetitions">Radial curve repetitions per mandala:</label>
-  <input type="text" id="radialRepetitions" readonly>
+  <input type="text" id="radialRepetitions" readonly size="7">
   <div id="sliderRadialRepetitions"></div>
+  </fieldset>
 
+  <fieldset>
+  <legend>Curve count</legend>
   <label for="lineCount">Number of curves:</label>
-  <input type="text" id="lineCount" readonly>
+  <input type="text" id="lineCount" readonly size="7">
   <div id="sliderLineCount"></div>
+  </fieldset>
 
+  <fieldset>
+  <legend>Curve complexity</legend>
   <label for="curvePoints">Points per curve:</label>
-  <input type="text" id="curvePoints" readonly>
+  <input type="text" id="curvePoints" readonly size="7">
   <div id="sliderCurvePoints"></div>
+  </fieldset>
 
   <button id="generate">Generate Mandala</button>
   <button id="startStop">Start Animation</button>
